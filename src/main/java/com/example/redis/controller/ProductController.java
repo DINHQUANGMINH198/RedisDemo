@@ -1,14 +1,12 @@
 package com.example.redis.controller;
 
 import com.example.redis.entity.ProductEntity;
+import com.example.redis.request.CreateProductRequest;
 import com.example.redis.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,5 +28,11 @@ public class ProductController {
     public ResponseEntity<Object> getProduct(@PathVariable("id") long id) {
         ProductEntity product = productService.getById(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
+    }
+
+    @PostMapping("/add-product")
+    public String create(@RequestBody CreateProductRequest request) {
+        productService.create(request);
+        return "Thanh cong";
     }
 }

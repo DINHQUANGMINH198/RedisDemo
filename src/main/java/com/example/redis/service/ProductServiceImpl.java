@@ -3,6 +3,7 @@ package com.example.redis.service;
 import com.example.redis.entity.ProductEntity;
 import com.example.redis.repository.ProductRedisRepository;
 import com.example.redis.repository.ProductRepository;
+import com.example.redis.request.CreateProductRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,23 @@ public class ProductServiceImpl implements ProductService {
             return product;
         } catch (Exception ex) {
             return null;
+        }
+    }
+
+    @Override
+    public void create(CreateProductRequest request) {
+        try {
+            ProductEntity entity = ProductEntity.builder()
+                    .name(request.getName())
+                    .price(request.getPrice())
+                    .image(request.getImage())
+                    .build();
+            productRepository.save(entity);
+            List<ProductEntity> products = productRepository.findAll();
+            String jsonProducts = mapper.writeValueAsString(products);
+            redis.opsForValue().set("products", jsonProducts);
+        } catch(Exception ex) {
+
         }
     }
 }
